@@ -4,12 +4,13 @@ import os
 
 browser = mechanicalsoup.StatefulBrowser(user_agent='MechanicalSoup')
 base_url = "https://lopezobrador.org.mx/secciones/comunicados/"
+filter_mañaneras = True # Mañaneras have multiple speakers
 
 if not os.path.exists('conference_audio'):
     os.makedirs('conference_audio')
 
 def extract_audio(url):
-    global browser
+    global browser, filter_mañaneras
 
     print("Searching titles in", url)
     r = browser.open(url)
@@ -32,13 +33,18 @@ def extract_audio(url):
             print("Audio file not found in entry. Skipping...\n")
             continue
 
-        print("Downloading audio file:", audio_url)
+        print("Audio file located:", audio_url)        
         file_name = audio_url.split('/')[-1]
+        
+        if filter_mañaneras and file_name.startswith("20"): # Mañaneras files names usually start with 20
+            print("Mañanera detected. Skipping...\n")
+            continue
 
         if os.path.isfile('conference_audio/'+file_name):
             print("File already exists","\n")            
             continue
 
+        print("Downloading...")
         response = requests.get(audio_url)        
 
         if response.ok:
@@ -56,5 +62,5 @@ page = 2
 while True:
     print("Crawling page", page)
     extract_audio(base_url+'page/'+str(page))
-    n += 1
+    page += 1
 
