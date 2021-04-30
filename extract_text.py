@@ -2,6 +2,12 @@ from pydub import AudioSegment
 import speech_recognition as sr
 import os
 
+GOOGLE_CLOUD_SPEECH_CREDENTIALS = r"""
+{
+  
+}
+"""
+
 r = sr.Recognizer()
 
 audio_path = "conference_audio"
@@ -13,7 +19,7 @@ if not os.path.exists('wavs'):
 
 with open("metadata.csv", 'w') as metadata:
     for audio in audio_list:
-        print("Analyzing audio file:", audio)        
+        print("Analyzing audio file:", audio, '\n')        
         audio_src = audio_path + '/' + audio
 
         audio_file = sr.AudioFile(audio_src)
@@ -24,14 +30,17 @@ with open("metadata.csv", 'w') as metadata:
         
         sector = 10
 
-        with audio_file as source:
-            
-
+        with audio_file as source:            
             while sector < audio_seconds:            
                 
                 try:
                     audio = r.record(source, duration=10)
-                    recognized_audio = r.recognize_google(audio, language="es-MX")
+                    
+                    #Using Cloud
+                    recognized_audio = r.recognize_google_cloud(audio, credentials_json=GOOGLE_CLOUD_SPEECH_CREDENTIALS, language="es-MX")
+
+                    #Using Google api
+                    #recognized_audio = r.recognize_google(audio, language="es-MX")
                     print("Recognized audio:", recognized_audio)
 
                     print("Cropping sector and saving in file -->", str(audio_count)+".wav")
@@ -49,6 +58,6 @@ with open("metadata.csv", 'w') as metadata:
                     print("Google Speech Recognition could not understand audio")
                 except sr.RequestError as e:
                     print("Could not request results from Google Speech Recognition service; {0}".format(e))                
-
+        print()
 
 
