@@ -1,6 +1,9 @@
 import mechanicalsoup
 import requests
+from pydub import AudioSegment
 import os
+
+
 
 browser = mechanicalsoup.StatefulBrowser(user_agent='MechanicalSoup')
 base_url = "https://lopezobrador.org.mx/secciones/comunicados/"
@@ -40,7 +43,7 @@ def extract_audio(url):
             print("Mañanera detected. Skipping...\n")
             continue
 
-        if os.path.isfile('conference_audio/'+file_name):
+        if os.path.isfile('conference_audio/'+file_name[:-4]+'.wav'):
             print("File already exists","\n")            
             continue
 
@@ -48,9 +51,22 @@ def extract_audio(url):
         response = requests.get(audio_url)        
 
         if response.ok:
-            with open('conference_audio/'+file_name, 'wb') as file:
+            file_path = 'conference_audio/'+file_name             
+            with open(file_path, 'wb') as file:
                 file.write(response.content)
-                print("Successfuly saved as:", file_name, "\n")                    
+                print("Successfuly saved as:", file_path, "\n")
+
+            # Convert mp3 file to wav      
+            print("Converting mp3 file to wav")      
+            audio_segment = AudioSegment.from_mp3(file_path)
+            audio_segment.set_channels(1)
+            wav_path = file_path[:-4]+'.wav'
+            audio_segment.split_to_mono()[0].export(wav_path, format="wav")
+            print("Successfuly saved as:", wav_path, "\n")
+
+            # Delete mp3 file
+            print("Removing mp3 file")
+            os.remove(file_path)            
         else:
             print("Unable to download\n")    
 
