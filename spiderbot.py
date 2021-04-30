@@ -4,7 +4,6 @@ from pydub import AudioSegment
 import os
 
 
-
 browser = mechanicalsoup.StatefulBrowser(user_agent='MechanicalSoup')
 base_url = "https://lopezobrador.org.mx/secciones/comunicados/"
 filter_mañaneras = True # Mañaneras have multiple speakers

@@ -139,3 +139,7 @@ cython_debug/
 
 # Folders
 conference_audio/
+wavs/
+
+# Metadata
+metadata.csv
