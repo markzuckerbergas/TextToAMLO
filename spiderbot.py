@@ -1,5 +1,7 @@
 import mechanicalsoup
 import requests
+import librosa
+import soundfile as sf
 from pydub import AudioSegment
 import os
 
@@ -63,9 +65,14 @@ def extract_audio(url):
             audio_segment.split_to_mono()[0].export(wav_path, format="wav")
             print("Successfuly saved as:", wav_path, "\n")
 
+            # Downsampling to 16kHz            
+            y, s = librosa.load(wav_path, sr=16000)
+            sf.write(wav_path, y, 16000)
+
             # Delete mp3 file
             print("Removing mp3 file")
-            os.remove(file_path)            
+            os.remove(file_path)
+            exit()
         else:
             print("Unable to download\n")    
 
