@@ -14,6 +14,8 @@ if not os.path.exists('wavs'):
 
 with open("metadata.csv", 'w') as metadata:
     for audio in audio_list:
+        if ".wav" not in audio:
+            continue
         with open("conference_audio_metadata/"+audio+".csv", 'r') as conference_metadata: 
             metadata_lines = conference_metadata.readlines()
             print("Croppping audio file:", audio, '\n')
