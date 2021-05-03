@@ -4,6 +4,7 @@ import librosa
 import soundfile as sf
 from pydub import AudioSegment
 import os
+import time
 
 
 browser = mechanicalsoup.StatefulBrowser(user_agent='MechanicalSoup')
@@ -20,8 +21,11 @@ def extract_audio(url):
     r = browser.open(url)
 
     if not r.ok:
-        print("URL not found", "EXITING PROGRAM")        
-        exit()
+        print("URL not found", "Waiting a few seconds before crwaling again.")        
+        time.sleep(15)
+        print("Creating new stateful brower instance")
+        browser = mechanicalsoup.StatefulBrowser(user_agent='MechanicalSoup')        
+        return
         
     entries = browser.page.select('.entry-title a')
 
