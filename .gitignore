@@ -139,6 +139,7 @@ cython_debug/
 
 # Folders
 conference_audio/
+conference_audio_metadata/
 wavs/
 
 # Metadata
