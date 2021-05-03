@@ -46,7 +46,7 @@ def extract_audio(url):
             print("Audio file located:", audio_url)        
             file_name = audio_url.split('/')[-1]
             
-            if filter_mañaneras and file_name.startswith("20"): # Mañaneras files names usually start with 20
+            if filter_mañaneras and (file_name.startswith("20") or "matutina" in file_name): # Mañaneras files names usually start with 20
                 print("Mañanera detected. Skipping...\n")
                 continue
 
