@@ -14,6 +14,8 @@ bucket = storage_client.get_bucket("amlo_audio")
 
 print("Uploading files to GCloud")
 for audio in audio_list:
+    if ".wav" not in audio:
+        continue
     blob = bucket.blob(audio)
     blob.upload_from_filename(audio_path+'/'+audio)
     print("Uploaded to GCloud", audio)
@@ -33,6 +35,8 @@ if not os.path.exists('conference_audio_metadata'):
 
 
 for audio in audio_list:
+    if ".wav" not in audio:
+        continue
     with open("conference_audio_metadata/"+audio+".csv", 'w') as metadata:
         print("Analyzing audio file:", audio, '\n')                
         gcs_uri = "gs://amlo_audio/" + audio
