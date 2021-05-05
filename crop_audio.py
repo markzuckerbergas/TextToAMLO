@@ -1,9 +1,7 @@
 from pydub import AudioSegment
 import os
+from num2words import num2words
 
-# Imports the Google Cloud client library
-from google.cloud import speech_v1p1beta1 as speech
-from google.cloud import storage
 
 audio_path = "conference_audio"
 audio_list = os.listdir(audio_path)
@@ -28,12 +26,21 @@ with open("metadata.csv", 'w') as metadata:
 
             for line in metadata_lines:
                 data = line.split("|")
+                text = data[0]
+                numbers_in_string = [int(s) for s in data[0].split() if s.isdigit()]
+
+                if len(numbers_in_string) > 0:                    
+                    for number in numbers_in_string:
+                        text = text.replace(str(number), num2words(number, lang='es'))                    
+
+
+                
                 print("Cropping sector and saving in file -->", str(audio_count)+".wav")
                 extract = audio_segment[float(data[1])*1000:(float(data[2])+1)*1000] # Milliseconds
                 extract.export('wavs/'+str(audio_count)+'.wav', format="wav")
 
                 # Formatting file in LJSpeech format                
-                metadata.write(str(audio_count)+'|'+data[0]+'|'+data[0].lower()+'\n')
+                metadata.write(str(audio_count)+'|'+text+'|'+text.lower()+'\n')
                 print("Sector text saved in metadata.csv")                
         
                 audio_count += 1
