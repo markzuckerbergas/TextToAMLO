@@ -1,16 +1,14 @@
 import os
+import sys
 
 # Imports the Google Cloud client library
 from google.cloud import speech_v1p1beta1 as speech
 from google.cloud import storage
 
-storage_client = storage.Client()
-bucket = storage_client.get_bucket("amlo_audio")
-
 audio_path = "conference_audio"
 audio_list = os.listdir(audio_path)
 storage_client = storage.Client()
-bucket = storage_client.get_bucket("amlo_audio")
+bucket = storage_client.get_bucket(sys.argv[1])
 
 print("Uploading files to GCloud")
 for audio in audio_list:
