@@ -37,7 +37,7 @@ for audio in audio_list:
         continue
     with open("conference_audio_metadata/"+audio+".csv", 'w') as metadata:
         print("Analyzing audio file:", audio, '\n')                
-        gcs_uri = "gs://amlo_audio/" + audio
+        gcs_uri = "gs://"+sys.argv[1]+"/" + audio
         recognition_audio = speech.RecognitionAudio(uri=gcs_uri)
         operation = client.long_running_recognize(config=config, audio=recognition_audio)
 
