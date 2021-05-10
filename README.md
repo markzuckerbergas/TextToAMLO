@@ -9,7 +9,7 @@ AMLO voice cloning (Dataset only). This repo has utility programs to help create
 ```bash
 apt-get install ffmpeg -y # Dependency needed to convert .mp3 files to .wav
 pip install --upgrade pip
-pip install -r requirements.tx
+pip install -r requirements.txt
 ```
 
 ## Step 1: Web Crawler
